@@ -124,7 +124,7 @@ class HBNBCommand(cmd.Cmd):
             return
         input_dict = {}
         parameter_split = arg_split [1:]
-        for value in split_parameters:
+        for value in parameter_split:
             parameter_key, parameter_value = value.split("=")
             if (parameter_value[0] == '"'):
                 input_dict[parameter_key]=parameter_value[1:-1].replace("_", " ")
