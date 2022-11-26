@@ -123,7 +123,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         input_dict = {}
-        parameter_split = arg_split [1:]
+        parameter_split = arg_split[1:]
         for value in parameter_split:
             parameter_key, parameter_value = value.split("=")
             if (parameter_value[0] == '"'):
@@ -134,8 +134,9 @@ class HBNBCommand(cmd.Cmd):
             else:
                 parameter_value = int(parameter_value)
                 input_dict[parameter_key]=parameter_value
-        new_instance = HBNBCommand.classes[arg_split[0]](**input_dict)
-        
+        new_instance = HBNBCommand.classes[arg_split[0]]()
+        new_instance.__dict__.update(input_dict)
+        # storage.new(new_instance)
         print(new_instance.id)
         storage.save()
 
