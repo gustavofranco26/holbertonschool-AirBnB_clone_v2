@@ -10,9 +10,8 @@ class FileStorage:
 
     def all(self, cls=None):
         """Returns a dictionary of models currently in storage"""
-        if cls == None:
+        if cls is None:
             return FileStorage.__objects
-        
         else:
             filtro_dictio = {}
             for key, value in FileStorage.__objects.items():
@@ -59,9 +58,8 @@ class FileStorage:
 
     def delete(self, obj=None):
         """public instance method to delete obj from __objects"""
-        if obj == None:
+        if obj is None:
             return
-
             key = "{}.{}".format(obj.__class__.__name__, obj.id)
             if FileStorage.__objects.get(key):
                 del FileStorage.__objects[key]
