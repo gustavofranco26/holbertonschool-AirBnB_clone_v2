@@ -1,8 +1,7 @@
 #!/usr/bin/python3
 """Defines the DBStorage engine."""
-from os
-from models.base_model import Base
-from models.base_model import BaseModel
+import os
+from models.base_model import BaseModel, Base
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
@@ -13,6 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import MetaData
 
 
 class DBStorage():
@@ -36,13 +36,13 @@ class DBStorage():
                                              os.getenv("HBNB_MYSQL_DB")),
                                       pool_pre_ping=True)
 
-        if getenv("HBNB_ENV") == "test":
+        if os.getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
-    def all(self, cls-None):
+    def all(self, cls=None):
         """ Query on current database for all o specify class"""
         dic = {}
-        types_obj = [State, City, User, Ammenity, Place, Review]
+        types_obj = [State, City, User, Amenity, Place, Review]
 
         if cls is not None and cls in types_obj:
             query_list = self.__session.query(cls).all()
@@ -69,11 +69,12 @@ class DBStorage():
             self.__session.delete(obj)
 
     def reload(self):
-        Base.metadata.create_all(self.__engine)
+        self.__session = Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False)
-        self.__session = scoped_session(session_factory)
+        Session = scoped_session(session_factory)
+        self.__session = Session()
 
     def close(self):
         """call remove method on the private session attribute"""
-        self.__session.remove()
+        self.__session.close()
