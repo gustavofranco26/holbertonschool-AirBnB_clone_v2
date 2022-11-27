@@ -42,17 +42,19 @@ class DBStorage():
     def all(self, cls=None):
         """ Query on current database for all o specify class"""
         dic = {}
-        types_obj = [State, City, User, Amenity, Place, Review]
+        types_obj = [State, City]
 
         if cls is not None and cls in types_obj:
             query_list = self.__session.query(cls).all()
             for el in query_list:
-                dic[el.to_dict()['__class__'] + '.' + el.id] = el
+                key = "{}.{}".format(type(el).__name__, el.id)
+                dic[key] = el
         else:
             for typ in types_obj:
-                query_list2 = self.__session.query(typ).all()
-                for el2 in query_list2:
-                    dic[el2.to_dict()['__class__'] + '.' + el2.id] = el2
+                query_list2 = self.__session.query(typ)
+                for el in query_list2:
+                     key = "{}.{}".format(type(el).__name__, el.id)
+                     dic[key] = el
         return dic
 
     def new(self, obj):
