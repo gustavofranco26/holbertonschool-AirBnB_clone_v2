@@ -5,7 +5,15 @@ from models.base_model import Base
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
 import os
-import models
+
+if os.getenv("HBNB_TYPE_STORAGE") == "db":
+    place_amenity = Table('place_amenity', Base.metadata,
+                          Column('place_id', String(60), ForeignKey("places.id"),
+                                 primary_key=True, nullable=False),
+                          Column('amenity_id', String(60),
+                                 ForeignKey("amenities.id"),
+                                 primary_key=True, nullable=False))
+
 
 class Place(BaseModel, Base):
     """ A place to stay """
@@ -22,6 +30,9 @@ class Place(BaseModel, Base):
         latitude = Column(Float)
         longitude = Column(Float)
         reviews = relationship('Review', backref='place', cascade='delete')
+        amenities = relationship("Amenity", secondary=place_amenity,
+                                 viewonly=False,
+                                 back_populates="place_amenities")
     else:
         city_id = ""
         user_id = ""
@@ -49,3 +60,31 @@ class Place(BaseModel, Base):
                         value, 'place_id') == self.id:
                     query.append(value)
             return query
+
+        @property
+        def amenities(self):
+            """returns Amenity instances w/ place_id = current Place.id"""
+            all_instances = models.storage.all()
+            query = []
+            for key, value in all_instances.items():
+                if key.startswith('Amenity') and getattr(
+                        value, 'place_id') == self.id:
+                    query.append(value)
+            return query
+
+        @amenities.setter
+        def amenities(self, amenity=None):
+            '''
+                Set list: amenity instances if Amenity.place_id==curr place.id
+                Set by adding instance objs to amenity_ids attribute in Place
+            '''
+            all_instances2 = models.storage.all()
+            new_dict2 = {}
+            for key, value in all_instance2.items():
+                if key.startswith('Amenity'):
+                    new_dict2.update({key: value})
+            query2 = []
+            if amenity:
+               for amenity in new_dict2.values():
+                   if amenity.place_id == self.id:
+                       amenity_ids.append(amenity)
