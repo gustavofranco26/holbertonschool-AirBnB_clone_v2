@@ -171,7 +171,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage._FileStorage__objects[key])
+            print(storage.all(HBNBCommand.classes[c_name])[key])
         except KeyError:
             print("** no instance found **")
 
@@ -202,9 +202,9 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id missing **")
             return
 
-        key = c_name + "." + c_id
-        print("--------------")
-        print(key)
+        # key = c_name + "." + c_id
+        # print("--------------")
+        # print(key)
 
         try:
             del (storage.all(HBNBCommand.classes[c_name])[key])
@@ -337,14 +337,14 @@ class HBNBCommand(cmd.Cmd):
                     att_val = HBNBCommand.types[att_name](att_val)
 
                 # update dictionary with name, value pair
-                print("before --->", new_dict)
+                # print("before --->", new_dict)
                 new_dict.__dict__.update({att_name: att_val})
-                print("after --->", new_dict)
+                # print("after --->", new_dict)
         new_dict.save()
         if os.getenv('HBNB_TYPE_STORAGE') == 'db':
             # storage.new(HBNBCommand.classes[c_name](**new_dict))
             # new_dict.save()
-            print("save---->", new_dict)
+            # print("save---->", new_dict)
             storage.new(HBNBCommand.classes[c_name](**new_dict.__dict__))
             storage.save()
         # new_dict.save()  # save updates to file

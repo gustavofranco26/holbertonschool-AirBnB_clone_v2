@@ -4,8 +4,11 @@ from models.base_model import BaseModel
 from models.base_model import Base
 from sqlalchemy import Column, Integer, Float, String, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from models.place import place_amenity
 import os
+
+if os.getenv("HBNB_TYPE_STORAGE") == "db":
+    from models.place import place_amenity
+
 
 class Amenity(BaseModel, Base):
     """ Representation of Amenity """
