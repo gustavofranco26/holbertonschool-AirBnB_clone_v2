@@ -53,7 +53,7 @@ def odd_even(n):
 
 
 @app.teardown_appcontext
-def tear_down_close(self):
+def tear_down_close(exc):
     """Module to remove current SQLAlchemy and close session"""
     storage.close()
 
@@ -70,8 +70,8 @@ def list_states_html():
 def html_states_cities():
     """Module to display html page where you look for ordered
     places and cities to insert in html in the LI tag"""
-    states = storage.all("State").values()
-    return render_template("8-cities_by_states.html", states=states)
+    states_objs = storage.all("State")
+    return render_template("8-cities_by_states.html", states=states_objs)
 
 
 if __name__ == '__main__':
